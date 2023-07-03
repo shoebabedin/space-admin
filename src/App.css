@@ -1,3 +1,4 @@
+@import url("https://fonts.cdnfonts.com/css/century-gothic");
 * {
   padding: 0;
 }
@@ -7,27 +8,53 @@ ul {
 a {
   text-decoration: none;
 }
+body{
+  font-family: "Century Gothic", sans-serif;
+}
 /* common css */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
+  background-color: black;
 }
-.header .menu ul {
+.header .menu ul,.header .auth ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
   gap: 10px;
+  margin-bottom: 0;
 }
-.header .auth ul {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  gap: 10px;
+.header .menu ul li a{
+  color: #fff;
+    font-size: 18px;
 }
+
+/* sidenav */
+.SideNav{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #000;
+}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+.SideNav{}
+/* sidenav */
+
 
 /* footer */
 .footer {

@@ -30,26 +30,20 @@ const Header = () => {
         <div className="logo">
           <Link to={"/"}>Logo</Link>
         </div>
-        <div className="menu">
-          <ul>
-            <li>
-              <Link to={"/"}>Home</Link>
-            </li>
-          </ul>
-        </div>
-        <div className="auth">
-          {loggedIn ? (
-            <>
-              <ul>
-                <li>
-                  <Button className="btn btn-secondary">{user.u_name}</Button>
-                </li>
-                <li>
-                  <Button onClick={handleLogout}>Logout</Button>
-                </li>
-              </ul>
-            </>
-          ) : (
+        
+        {loggedIn ? (
+          <div className="auth">
+            <ul>
+              <li>
+                <Button className="btn btn-secondary">{user.u_name}</Button>
+              </li>
+              <li>
+                <Button onClick={handleLogout}>Logout</Button>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <div className="auth">
             <ul>
               <li>
                 <Link to={"/login"}>Login</Link>
@@ -58,8 +52,8 @@ const Header = () => {
                 <Link to={"/signup"}>Signup</Link>
               </li>
             </ul>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </>
   );

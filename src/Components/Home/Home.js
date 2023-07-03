@@ -51,11 +51,15 @@ const Home = () => {
 
   // console.log(localStorage.getItem("data"));
 
-  if (localStorage.getItem("user") == null) {
-    navigate("login")
-  }else{
-    navigate("/")
-  }
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem("user"));
+    if (items == null) {
+      navigate("login")
+    } else {
+      navigate("/")
+    }
+  }, []);
+
 
   return (
     <>

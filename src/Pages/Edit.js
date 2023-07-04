@@ -10,6 +10,8 @@ const Edit = () => {
   const [data, setData] = useState([]);
   const [email, setEmail] = useState("");
   const [u_name, setName] = useState("");
+  const [file, setFile] = useState();
+
 
   useEffect(() => {
     axios
@@ -35,34 +37,31 @@ const Edit = () => {
     e.preventDefault();
     const formData = new FormData();
 
+   
     formData.append("email", email);
     formData.append("u_name", u_name);
+    formData.append("file", file);
 
-    const updateData = {
-      email: formData.get("email"),
-      u_name: formData.get("u_name")
-    };
+    
 
     axios
-      .post(`${domain}/updateuser/${params.id}`, updateData)
+      .post(`${domain}/updateuser/${params.id}`, formData)
       .then((res) => {
         console.log(res);
-        navigate.push('/')
+        navigate('/')
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  console.log(email);
-  console.log(u_name);
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-12">
             <Form className="row" onSubmit={handleSubmit}>
-              <Col>
+              <Col lg={6} className="mb-2">
                 <Form.Group controlId="Name">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
@@ -72,8 +71,8 @@ const Edit = () => {
                   />
                 </Form.Group>
               </Col>
-              <Col>
-                <Form.Group controlId="Name">
+              <Col lg={6} className="mb-2">
+                <Form.Group controlId="email">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="text"
@@ -82,33 +81,22 @@ const Edit = () => {
                   />
                 </Form.Group>
               </Col>
-              {/* <div className="col-lg-6 mb-3">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="form-control"
-                  value={singleUser[0]?.email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div> */}
-              {/* <div className="col-lg-6 mb-3">
-                <label htmlFor="email">Name</label>
-                <input
-                  type="text"
-                  name="u_name"
-                  id="name"
-                  value={singleUser[0]?.u_name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="form-control"
-                />
-              </div> */}
-              <div className="col-12">
+              <Col lg={6} className="mb-2">
+                <Form.Group controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    
+                  />
+                </Form.Group>
+              </Col>
+              
+              <Col lg={12} className="mt-2">
                 <Button type="submit" variant="primary">
                   Update
                 </Button>
-              </div>
+              </Col>
             </Form>
           </div>
         </div>

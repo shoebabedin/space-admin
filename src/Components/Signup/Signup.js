@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Button, FloatingLabel, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -75,16 +75,6 @@ const Signup = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
-            <FloatingLabel
-              controlId="floatingSelect"
-              label="Works with selects"
-            >
-              <Form.Select aria-label="Floating label select example">
-                <option>Open this select menu</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </Form.Select>
-            </FloatingLabel>
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
               <Link to={"/login"}>Already have an account</Link>
             </Form.Group>

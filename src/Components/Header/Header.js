@@ -22,7 +22,6 @@ const Header = () => {
     navigate("/login");
   };
 
-  console.log(user);
 
   return (
     <>
@@ -30,29 +29,43 @@ const Header = () => {
         <div className="logo">
           <Link to={"/"}>Logo</Link>
         </div>
-        
+
         {loggedIn ? (
-          <div className="auth">
-            <ul>
-              <li>
-                <Button className="btn btn-secondary">{user.u_name}</Button>
-              </li>
-              <li>
-                <Button onClick={handleLogout}>Logout</Button>
-              </li>
-            </ul>
-          </div>
+          <>
+            <div className="menu">
+              <ul>
+                <li>
+                  <Link to={"/"}>Home</Link>
+                </li>
+                <li>
+                  <Link to={"blog"}>Blog</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="auth">
+              <ul>
+                <li>
+                  <Button className="btn btn-secondary">{user.u_name}</Button>
+                </li>
+                <li>
+                  <Button onClick={handleLogout}>Logout</Button>
+                </li>
+              </ul>
+            </div>
+          </>
         ) : (
-          <div className="auth">
-            <ul>
-              <li>
-                <Link to={"/login"}>Login</Link>
-              </li>
-              <li>
-                <Link to={"/signup"}>Signup</Link>
-              </li>
-            </ul>
-          </div>
+          <>
+            <div className="auth">
+              <ul>
+                <li>
+                  <Link to={"/login"}>Login</Link>
+                </li>
+                <li>
+                  <Link to={"/signup"}>Signup</Link>
+                </li>
+              </ul>
+            </div>
+          </>
         )}
       </div>
     </>

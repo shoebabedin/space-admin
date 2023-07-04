@@ -13,7 +13,6 @@ const Home = () => {
     axios
       .get(`${domain}/viewuser`)
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
@@ -26,7 +25,6 @@ const Home = () => {
     axios
       .post(`${domain}/deleteuser/${id}`)
       .then((res) => {
-        console.log(res);
         setDeleteData(res);
       })
       .catch((err) => {
@@ -34,20 +32,7 @@ const Home = () => {
       });
   };
 
-  //   Edit user
-  const handleEdit = (id, value) => {
-    console.log(value);
-    axios
-      .post(`${domain}/updateuser/${id}`, value)
-      .then((res) => {
-        console.log(res);
-        
-      })
-      .catch((err) => {
-        console.log(err);
-        
-      });
-  };
+
 
   // console.log(localStorage.getItem("data"));
 
@@ -60,7 +45,6 @@ const Home = () => {
     }
   }, []);
 
-
   return (
     <>
       <div className="container">
@@ -72,6 +56,7 @@ const Home = () => {
                   <td>ID</td>
                   <td>Email</td>
                   <td>User Name</td>
+                  <td>Image</td>
                   <td>Action</td>
                 </tr>
               </thead>
@@ -82,6 +67,9 @@ const Home = () => {
                       <td>{item.id}</td>
                       <td>{item.email}</td>
                       <td>{item.u_name}</td>
+                      <td>{item.image == null ? "No Image Uploaded" : <>
+                        <img className="img-fluid" src={`${domain}/uploads/${item.image}`} alt="" style={{width: "100px"}}/>
+                      </>}</td>
                       <td>
                         <Link
                           to={`/edit/${item.id}`}

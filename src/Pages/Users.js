@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const Home = () => {
-  const domain = process.env.REACT_APP_DOMAIN;
+const Users = () => {
+    const domain = process.env.REACT_APP_DOMAIN;
   const [data, setData] = useState([]);
   const [deleteData, setDeleteData] = useState([]);
   const navigate = useNavigate()
@@ -44,9 +44,8 @@ const Home = () => {
       navigate("/")
     }
   }, []);
-
-  return (
-    <>
+    return (
+        <>
       <div className="container">
         <div className="row">
           <div className="col-12">
@@ -94,7 +93,7 @@ const Home = () => {
         </div>
       </div>
     </>
-  );
+    );
 };
 
-export default Home;
+export default Users;

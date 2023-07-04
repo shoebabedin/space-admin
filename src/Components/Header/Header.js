@@ -40,6 +40,9 @@ const Header = () => {
                 <li>
                   <Link to={"blog"}>Blog</Link>
                 </li>
+                <li>
+                  <Link to={"users"}>Users</Link>
+                </li>
               </ul>
             </div>
             <div className="auth">

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const Users = () => {
+const People = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const [data, setData] = useState([]);
   const [deleteData, setDeleteData] = useState([]);
@@ -11,7 +11,7 @@ const Users = () => {
 
   useEffect(() => {
     axios
-      .get(`${domain}/viewuser`)
+      .get(`${domain}/people`)
       .then((res) => {
         setData(res.data);
       })
@@ -23,7 +23,7 @@ const Users = () => {
   //   delete user
   const handleClick = (id) => {
     axios
-      .post(`${domain}/deleteuser/${id}`)
+      .post(`${domain}/deletepeople/${id}`)
       .then((res) => {
         setDeleteData(res);
       })
@@ -38,47 +38,57 @@ const Users = () => {
     const items = JSON.parse(localStorage.getItem("user"));
     if (items == null) {
       navigate("login");
-    } 
+    }
   }, []);
+
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <Table striped bordered hover>
+            <div className="d-flex align-items-center justify-content-between">
+              <h2 className="text-center title">People Page</h2>
+
+              <Link to={"/add-people"} className="btn btn-primary">
+                Add New People
+              </Link>
+            </div>
+          </div>
+          <div className="col-12">
+            <Table striped bordered hover responsive variant="dark">
               <thead>
                 <tr>
-                  <td>ID</td>
-                  <td>Email</td>
-                  <td>User Name</td>
-                  <td>Image</td>
-                  <td>Action</td>
+                  <td colSpan={1}>ID</td>
+                  <td colSpan={1}>Name</td>
+                  <td colSpan={1}>Designation</td>
+                  <td colSpan={1}>Image</td>
+                  <td colSpan={1}>Action</td>
                 </tr>
               </thead>
               <tbody>
                 {data &&
                   data.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.id}</td>
-                      <td>{item.email}</td>
-                      <td>{item.u_name}</td>
-                      <td>
+                      <td colSpan={1}>{item.id}</td>
+                      <td colSpan={1}>{item.name}</td>
+                      <td colSpan={1}>{item.designation}</td>
+                      <td colSpan={1}>
                         {item.image == null ? (
                           "No Image Uploaded"
                         ) : (
                           <>
                             <img
-                              className="img-fluid"
+                              className="img-fluid mx-2"
                               src={`${domain}/uploads/${item.image}`}
                               alt=""
-                              style={{ width: "100px" }}
+                              style={{ width: "50px", height: "50px" }}
                             />
                           </>
                         )}
                       </td>
-                      <td>
+                      <td colSpan={1}>
                         <Link
-                          to={`/users-edit/${item.id}`}
+                          to={`/edit-people/${item.id}`}
                           className="btn btn-primary me-2"
                         >
                           Edit
@@ -103,4 +113,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default People;

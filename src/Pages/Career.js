@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const Users = () => {
+const Career = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const [data, setData] = useState([]);
   const [deleteData, setDeleteData] = useState([]);
@@ -11,7 +11,7 @@ const Users = () => {
 
   useEffect(() => {
     axios
-      .get(`${domain}/viewuser`)
+      .get(`${domain}/career`)
       .then((res) => {
         setData(res.data);
       })
@@ -23,7 +23,7 @@ const Users = () => {
   //   delete user
   const handleClick = (id) => {
     axios
-      .post(`${domain}/deleteuser/${id}`)
+      .post(`${domain}/deletecareer/${id}`)
       .then((res) => {
         setDeleteData(res);
       })
@@ -32,53 +32,57 @@ const Users = () => {
       });
   };
 
-  // console.log(localStorage.getItem("data"));
+  console.log(data);
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("user"));
     if (items == null) {
       navigate("login");
-    } 
+    }
   }, []);
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <Table striped bordered hover>
+            <div className="d-flex align-items-center justify-content-between">
+              <h2 className="text-center title">Career Page</h2>
+
+              <Link to={"/create-career"} className="btn btn-primary">
+                New Career add
+              </Link>
+            </div>
+          </div>
+          <div className="col-12">
+            <Table striped bordered hover responsive variant="dark">
               <thead>
                 <tr>
-                  <td>ID</td>
-                  <td>Email</td>
-                  <td>User Name</td>
-                  <td>Image</td>
-                  <td>Action</td>
+                  <td colSpan={1}>ID</td>
+                  <td colSpan={1}>Title</td>
+                  <td colSpan={1}>Vacancy</td>
+                  <td colSpan={1}>Context</td>
+                  <td colSpan={1}>Responsibilities</td>
+                  <td colSpan={1}>Requirement</td>
+                  <td colSpan={1}>Education</td>
+                  <td colSpan={1}>Salary</td>
+                  <td colSpan={1}>Action</td>
                 </tr>
               </thead>
               <tbody>
                 {data &&
                   data.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.id}</td>
-                      <td>{item.email}</td>
-                      <td>{item.u_name}</td>
-                      <td>
-                        {item.image == null ? (
-                          "No Image Uploaded"
-                        ) : (
-                          <>
-                            <img
-                              className="img-fluid"
-                              src={`${domain}/uploads/${item.image}`}
-                              alt=""
-                              style={{ width: "100px" }}
-                            />
-                          </>
-                        )}
-                      </td>
-                      <td>
+                      <td colSpan={1}>{item.id}</td>
+                      <td colSpan={1}>{item.title}</td>
+                      <td colSpan={1}>{item.vacancy}</td>
+                      <td colSpan={1}>{item.context}</td>
+                      <td colSpan={1}>{item.responsibilities}</td>
+                      <td colSpan={1}>{item.requirement}</td>
+                      <td colSpan={1}>{item.education}</td>
+                      <td colSpan={1}>{item.salary}</td>
+                      <td colSpan={1}>
                         <Link
-                          to={`/users-edit/${item.id}`}
+                          to={`/edit-career/${item.id}`}
                           className="btn btn-primary me-2"
                         >
                           Edit
@@ -103,4 +107,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Career;

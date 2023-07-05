@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 const HomeAdded = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [googleMap, setGoogleMap] = useState("");
   const [files, setFiles] = useState([]);
 
   const handleSubmit = (e) => {
@@ -15,18 +18,21 @@ const HomeAdded = () => {
 
     const formData = new FormData();
 
-    formData.append("title", title);
-    formData.append("content", content);
+    formData.append("companyName", companyName);
+    formData.append("address", address);
+    formData.append("phone", phone);
+    formData.append("email", email);
+    formData.append("googleMap", googleMap);
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
 
     console.log(formData.get("files"));
     axios
-      .post(`${domain}/createblog`, formData)
+      .post(`${domain}/createhome`, formData)
       .then((res) => {
         console.log(res);
-        navigate("/blog");
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -43,7 +49,7 @@ const HomeAdded = () => {
                   <Form.Label>Company Name</Form.Label>
                   <Form.Control
                     type="text"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setCompanyName(e.target.value)}
                   />
                 </Form.Group>
               </Col>
@@ -52,7 +58,7 @@ const HomeAdded = () => {
                   <Form.Label>Address</Form.Label>
                   <Form.Control
                     type="text"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                 </Form.Group>
               </Col>
@@ -61,7 +67,7 @@ const HomeAdded = () => {
                   <Form.Label>Phone</Form.Label>
                   <Form.Control
                     type="text"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </Form.Group>
               </Col>
@@ -70,7 +76,7 @@ const HomeAdded = () => {
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </Form.Group>
               </Col>
@@ -79,7 +85,7 @@ const HomeAdded = () => {
                   <Form.Label>Google map</Form.Label>
                   <Form.Control
                     type="text"
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setGoogleMap(e.target.value)}
                   />
                 </Form.Group>
               </Col>

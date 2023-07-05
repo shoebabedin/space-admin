@@ -3,18 +3,18 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
-const EditBlog = () => {
+const EditPeople = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const params = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [files, setFiles] = useState([]);
+  const [name, setName] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [file, setFile] = useState();
 
   useEffect(() => {
     axios
-      .get(`${domain}/blog`)
+      .get(`${domain}/people`)
       .then((res) => {
         setData(res.data);
       })
@@ -23,13 +23,13 @@ const EditBlog = () => {
       });
   }, []);
 
-
   const singleUser = data.find((item) => item.id == params.id);
 
   useEffect(() => {
     if (data.length > 0 && params.id && singleUser) {
-        setTitle(singleUser.title || "");
-        setContent(singleUser.content || "");
+      setName(singleUser.name || "");
+      setDesignation(singleUser.designation || "");
+      setFile(singleUser.image || "");
     }
   }, [data, params.id, singleUser]);
 
@@ -38,17 +38,18 @@ const EditBlog = () => {
 
     const formData = new FormData();
 
-    formData.append("title", title);
-    formData.append("content", content);
-    for (let i = 0; i < files.length; i++) {
-        formData.append("files", files[i]);
-      }
+    formData.append("name", name);
+    formData.append("designation", designation);
+    formData.append("file", file);
+
+    console.log(formData.get("file", file));
+    // return
 
     axios
-      .post(`${domain}/updateblog/${params.id}`, formData)
+      .post(`${domain}/updatepeople/${params.id}`, formData)
       .then((res) => {
         console.log(res);
-        navigate('/blog')
+        navigate("/people");
       })
       .catch((err) => {
         console.log(err);
@@ -60,29 +61,27 @@ const EditBlog = () => {
         <Row>
           <Col>
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="title">
-                <Form.Label>Title</Form.Label>
+              <Form.Group controlId="Name">
+                <Form.Label>Name</Form.Label>
                 <Form.Control
                   type="text"
-                  defaultValue={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  defaultValue={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Form.Group>
-              <Form.Group controlId="content">
-                <Form.Label>Content</Form.Label>
+              <Form.Group controlId="Designation">
+                <Form.Label>Designation</Form.Label>
                 <Form.Control
-                  as="textarea"
-                  rows={4}
-                  defaultValue={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  type="text"
+                  defaultValue={designation}
+                  onChange={(e) => setDesignation(e.target.value)}
                 />
               </Form.Group>
               <Form.Group controlId="image">
                 <Form.Label>Image</Form.Label>
                 <Form.Control
                   type="file"
-                  onChange={(e) => setFiles(e.target.files)}
-                  multiple
+                  onChange={(e) => setFile(e.target.files[0])}
                 />
               </Form.Group>
               <Button type="submit" className="mt-2">
@@ -96,4 +95,4 @@ const EditBlog = () => {
   );
 };
 
-export default EditBlog;
+export default EditPeople;

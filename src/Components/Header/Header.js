@@ -1,11 +1,25 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const domain = process.env.REACT_APP_DOMAIN;
   const [loggedIn, setLoggedIn] = useState();
   const navigate = useNavigate();
   const [user, setUser] = useState();
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    axios
+      .get(`${domain}/home`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("user"));
@@ -22,12 +36,20 @@ const Header = () => {
     navigate("/login");
   };
 
-
   return (
     <>
       <div className="header">
         <div className="logo">
-          <Link to={"/"}>Logo</Link>
+          <Link to={"/"}>
+          {data?.map(item=>
+            <img key={item.id}
+                className="img-fluid"
+                src={`${domain}/uploads/${JSON.parse(item.image)}`}
+                alt=""
+                style={{width: "100%", height: "30px"}}
+              />
+          )}
+          </Link>
         </div>
 
         {loggedIn ? (
@@ -38,10 +60,16 @@ const Header = () => {
                   <Link to={"/"}>Home</Link>
                 </li>
                 <li>
-                  <Link to={"blog"}>Blog</Link>
+                  <Link to={"/blog"}>Blog</Link>
                 </li>
                 <li>
-                  <Link to={"users"}>Users</Link>
+                  <Link to={"/users"}>Users</Link>
+                </li>
+                <li>
+                  <Link to={"/people"}>People</Link>
+                </li>
+                <li>
+                  <Link to={"/career"}>Career</Link>
                 </li>
               </ul>
             </div>

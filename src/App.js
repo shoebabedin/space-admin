@@ -9,10 +9,17 @@ import Login from "./Components/Login/Login";
 import Signup from "./Components/Signup/Signup";
 import CreateBlog from './Components/blog/CreateBlog';
 import EditBlog from './Components/blog/EditBlog';
+import CreateCareer from './Components/career/CreateCareer';
+import EditCareer from './Components/career/EditCareer';
+import AddPeople from './Components/people/AddPeople';
+import EditPeople from './Components/people/EditPeople';
+import Edit from './Components/users/Edit';
 import Blog from './Pages/Blog';
-import Edit from './Pages/Edit';
+import Career from './Pages/Career';
 import Home from "./Pages/Home";
 import NoPage from "./Pages/NoPage";
+import People from './Pages/People';
+import Users from './Pages/Users';
 
 function App() {
   return (
@@ -23,11 +30,17 @@ function App() {
             <Route index element={<Home />} />
             <Route path='home-added' element={<HomeAdded />} />
             <Route path='home-edit/:id' element={<HomeEdit />} />
-            <Route path='edit/:id' element={<Edit />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/create-blog" element={<CreateBlog />} />
             <Route path="/edit-blog/:id" element={<EditBlog />} />
-            <Route path='users' element={<Home />} />
+            <Route path='users' element={<Users />} />
+            <Route path='users-edit/:id' element={<Edit />} />
+            <Route path='people' element={<People />} />
+            <Route path='add-people' element={<AddPeople />} />
+            <Route path='edit-people/:id' element={<EditPeople />} />
+            <Route path='career' element={<Career />} />
+            <Route path='create-career' element={<CreateCareer />} />
+            <Route path='edit-career/:id' element={<EditCareer />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

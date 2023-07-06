@@ -9,7 +9,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState();
   const [data, setData] = useState();
-
+console.log(domain);
   useEffect(() => {
     axios
       .get(`${domain}/home`)

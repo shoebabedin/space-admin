@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
-const Users = () => {
+const Work = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const [data, setData] = useState([]);
   const [deleteData, setDeleteData] = useState([]);
@@ -11,7 +11,7 @@ const Users = () => {
 
   useEffect(() => {
     axios
-      .get(`${domain}/viewuser`)
+      .get(`${domain}/work`)
       .then((res) => {
         setData(res.data);
       })
@@ -39,18 +39,27 @@ const Users = () => {
     }
   }, []);
 
-  
+  console.log(data);
+
   return (
     <>
       <div className="container">
         <div className="row">
+        <div className="col-12">
+            <div className="d-flex align-items-center justify-content-between">
+              <h2 className="text-center title">Work Page</h2>
+                <Link to={"/work-added"} className="btn btn-primary">
+                  Work data added
+                </Link>
+            </div>
+          </div>
           <div className="col-12">
             <Table striped bordered hover>
               <thead>
                 <tr>
                   <td>ID</td>
-                  <td>Email</td>
-                  <td>User Name</td>
+                  <td>Title</td>
+                  <td>Description</td>
                   <td>Image</td>
                   <td>Action</td>
                 </tr>
@@ -60,25 +69,16 @@ const Users = () => {
                   data.map((item, index) => (
                     <tr key={index}>
                       <td>{item.id}</td>
-                      <td>{item.email}</td>
-                      <td>{item.u_name}</td>
+                      <td>{item.title}</td>
+                      <td>{item.description}</td>
                       <td>
-                        {item.image == null ? (
-                          "No Image Uploaded"
-                        ) : (
-                          <>
-                            <img
-                              className="img-fluid"
-                              src={`${domain}/uploads/${item.image}`}
-                              alt=""
-                              style={{ width: "100px" }}
-                            />
-                          </>
-                        )}
+                      {JSON.parse(item.image).map((item, index)=>
+                        <img key={index} className="img-fluid mx-2" src={`${domain}/uploads/${item}`} alt="" style={{width: "50px", height: "50px"}}/>
+                      )}
                       </td>
                       <td>
                         <Link
-                          to={`/users-edit/${item.id}`}
+                          to={`/work-edit/${item.id}`}
                           className="btn btn-primary me-2"
                         >
                           Edit
@@ -103,4 +103,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Work;

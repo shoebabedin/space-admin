@@ -13,6 +13,7 @@ const HomeEdit = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [googleMap, setGoogleMap] = useState("");
+  const [file, setFile] = useState({});
   const [files, setFiles] = useState({});
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const HomeEdit = () => {
       setAddress(singleUser.address || "");
       setPhone(singleUser.phone || "");
       setEmail(singleUser.email || "");
-      setGoogleMap(singleUser.google_map || "");
+      setGoogleMap(singleUser.map || "");
     }
   }, [data, params.id, singleUser]);
 
@@ -48,11 +49,14 @@ const HomeEdit = () => {
     formData.append("phone", phone);
     formData.append("email", email);
     formData.append("googleMap", googleMap);
+    formData.append("file", file);
 
+   
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
 
+    
     axios
       .post(`${domain}/updatehome/${params.id}`, formData)
       .then((res) => {
@@ -124,6 +128,25 @@ const HomeEdit = () => {
                   <Form.Label>Image</Form.Label>
                   <Form.Control
                     type="file"
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                  {/* <div className="bg-black">
+                    <img
+                      className="img-fluid"
+                      src={`${domain}/uploads/${
+                        singleUser && JSON.parse(singleUser.image)
+                      }`}
+                      alt=""
+                      style={{ width: "100%", height: "50px" }}
+                    />
+                  </div> */}
+                </Form.Group>
+              </Col>
+              <Col lg={6}>
+                <Form.Group controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="file"
                     onChange={(e) => setFiles(e.target.files)}
                     multiple
                   />
@@ -131,7 +154,7 @@ const HomeEdit = () => {
                     <img
                       className="img-fluid"
                       src={`${domain}/uploads/${
-                        singleUser && JSON.parse(singleUser.image)
+                        singleUser && JSON.parse(singleUser.home_slider)
                       }`}
                       alt=""
                       style={{ width: "100%", height: "50px" }}

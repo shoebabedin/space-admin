@@ -1,25 +1,27 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const [loggedIn, setLoggedIn] = useState();
   const navigate = useNavigate();
   const [user, setUser] = useState();
+  const [user1, setUser1] = useState();
   const [data, setData] = useState();
-console.log(domain);
   useEffect(() => {
     axios
       .get(`${domain}/home`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data[0]);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+  console.log(user1);
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("user"));
@@ -35,20 +37,17 @@ console.log(domain);
     localStorage.removeItem("user");
     navigate("/login");
   };
-
   return (
     <>
       <div className="header">
         <div className="logo">
           <Link to={"/"}>
-          {data?.map(item=>
-            <img key={item.id}
-                className="img-fluid"
-                src={`${domain}/uploads/${JSON.parse(item.image)}`}
-                alt=""
-                style={{width: "100%", height: "30px"}}
-              />
-          )}
+            <img
+              className="img-fluid"
+              src={`${domain}/uploads/${data?.image}`}
+              alt=""
+              style={{ width: "100%", height: "30px" }}
+            />
           </Link>
         </div>
 
@@ -57,19 +56,22 @@ console.log(domain);
             <div className="menu">
               <ul>
                 <li>
-                  <Link to={"/"}>Home</Link>
+                  <NavLink to={"/"}>Home</NavLink>
                 </li>
                 <li>
-                  <Link to={"/blog"}>Blog</Link>
+                  <NavLink to={"/work"}>Work</NavLink>
                 </li>
                 <li>
-                  <Link to={"/users"}>Users</Link>
+                  <NavLink to={"/blog"}>Blog</NavLink>
                 </li>
                 <li>
-                  <Link to={"/people"}>People</Link>
+                  <NavLink to={"/users"}>Users</NavLink>
                 </li>
                 <li>
-                  <Link to={"/career"}>Career</Link>
+                  <NavLink to={"/people"}>People</NavLink>
+                </li>
+                <li>
+                  <NavLink to={"/career"}>Career</NavLink>
                 </li>
               </ul>
             </div>

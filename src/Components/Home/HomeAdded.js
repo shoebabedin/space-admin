@@ -11,7 +11,8 @@ const HomeAdded = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [googleMap, setGoogleMap] = useState("");
-  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState([]);
+  const [files, setFiles] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +24,10 @@ const HomeAdded = () => {
     formData.append("phone", phone);
     formData.append("email", email);
     formData.append("googleMap", googleMap);
+
+    for (let i = 0; i < file.length; i++) {
+      formData.append("file", file[i]);
+    }
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
@@ -90,6 +95,15 @@ const HomeAdded = () => {
                 </Form.Group>
               </Col>
               <Col lg={6}>
+                <Form.Group controlId="image">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </Form.Group>
+              </Col>
+              <Col lg={12}>
                 <Form.Group controlId="image">
                   <Form.Label>Image</Form.Label>
                   <Form.Control

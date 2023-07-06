@@ -34,6 +34,7 @@ const BlogList = () => {
   };
 
 
+
   return (
     <>
       <Container>
@@ -64,8 +65,8 @@ const BlogList = () => {
                       <td>{item.id}</td>
                       <td>{item.title}</td>
                       <td>{item.content}</td>
-                      <td>{JSON.parse(item.blog_Img).map(item=>
-                        <img className="img-fluid mx-2" src={`${domain}/uploads/${item}`} alt="" style={{width: "50px", height: "50px"}}/>
+                      <td>{JSON.parse(item.blog_Img).map((item, index)=>
+                        <img key={index} className="img-fluid mx-2" src={`${domain}/uploads/${item}`} alt="" style={{width: "50px", height: "50px"}}/>
                       )}</td>
                       <td>
                         <Link

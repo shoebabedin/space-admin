@@ -48,7 +48,7 @@ const Edit = () => {
       .post(`${domain}/updateuser/${params.id}`, formData)
       .then((res) => {
         console.log(res);
-        navigate('/')
+        navigate('/users')
       })
       .catch((err) => {
         console.log(err);

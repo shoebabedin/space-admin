@@ -14,12 +14,15 @@ import EditCareer from './Components/career/EditCareer';
 import AddPeople from './Components/people/AddPeople';
 import EditPeople from './Components/people/EditPeople';
 import Edit from './Components/users/Edit';
+import WorkAdded from './Components/work/WorkAdded';
 import Blog from './Pages/Blog';
 import Career from './Pages/Career';
 import Home from "./Pages/Home";
 import NoPage from "./Pages/NoPage";
 import People from './Pages/People';
 import Users from './Pages/Users';
+import Work from './Pages/Work';
+import WorkEdit from './Components/work/WorkEdit';
 
 function App() {
   return (
@@ -30,6 +33,9 @@ function App() {
             <Route index element={<Home />} />
             <Route path='home-added' element={<HomeAdded />} />
             <Route path='home-edit/:id' element={<HomeEdit />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/work-added" element={<WorkAdded />} />
+            <Route path="/work-edit/:id" element={<WorkEdit />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/create-blog" element={<CreateBlog />} />
             <Route path="/edit-blog/:id" element={<EditBlog />} />

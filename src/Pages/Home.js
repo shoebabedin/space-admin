@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -38,8 +38,10 @@ const Home = () => {
     const items = JSON.parse(localStorage.getItem("user"));
     if (items == null) {
       navigate("login");
-    } 
+    }
   }, []);
+
+  console.log(data);
 
   return (
     <>
@@ -56,65 +58,77 @@ const Home = () => {
             </div>
           </div>
           <div className="col-12">
-            <Table striped bordered hover responsive variant="dark">
-              <thead>
-                <tr>
-                  <td colSpan={1}>ID</td>
-                  <td colSpan={1}>Company Name</td>
-                  <td colSpan={1}>Address</td>
-                  <td colSpan={1}>Phone</td>
-                  <td colSpan={1}>Email</td>
-                  <td colSpan={1}>Google map</td>
-                  <td colSpan={1}>Logo</td>
-                  <td colSpan={1}>Action</td>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.map((item, index) => (
-                    <tr key={index}>
-                      <td colSpan={1}>{item.id}</td>
-                      <td colSpan={1}>{item.company_name}</td>
-                      <td colSpan={1}>{item.address}</td>
-                      <td colSpan={1}>{item.phone}</td>
-                      <td colSpan={1}>{item.email}</td>
-                      <td colSpan={1}>{item.google_map}</td>
-                      <td colSpan={1}>
-                        {item.image == null ? (
-                          "No Image Uploaded"
-                        ) : (
-                          <>
-                            {JSON.parse(item.image).map((item) => (
-                              <img
-                                className="img-fluid mx-2"
-                                src={`${domain}/uploads/${item}`}
-                                alt=""
-                                style={{ width: "50px", height: "50px" }}
-                              />
-                            ))}
-                          </>
-                        )}
-                      </td>
-                      <td colSpan={1}>
-                        <Link
-                          to={`/home-edit/${item.id}`}
-                          className="btn btn-primary me-2"
-                        >
-                          Edit
-                        </Link>
-                        <Button
-                          onClick={() => handleClick(item.id)}
-                          className="btn btn-danger"
-                          role="button"
-                          type="submit"
-                        >
-                          Delete
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
+            <div className="home_info border px-2 py-3 bg-dark text-light">
+              <div className="action_btn d-flex align-items-center justify-content-end">
+                <Link
+                  to={`/home-edit/${data[0]?.id}`}
+                  className="btn btn-primary me-2"
+                >
+                  Edit
+                </Link>
+                <Button
+                  onClick={() => handleClick(data[0]?.id)}
+                  className="btn btn-danger"
+                  role="button"
+                  type="submit"
+                >
+                  Delete
+                </Button>
+              </div>
+              <h4>
+                Company Logo:{" "}
+                <span>
+                  {data[0]?.image == null ? (
+                    "No Image Uploaded"
+                  ) : (
+                    <>
+                        <img
+                          className="img-fluid mx-2"
+                          src={`${domain}/uploads/${data[0]?.image}`}
+                          alt=""
+                          style={{ width: "150px", height: "40px" }}
+                        />
+                    </>
+                  )}
+                </span>
+              </h4>
+              <h4>
+                Company Name: <span>{data[0]?.company_name}</span>
+              </h4>
+              <h6>
+                Company address: <span>{data[0]?.address}</span>
+              </h6>
+              <h6>
+                Company phone: <span>{data[0]?.phone}</span>
+              </h6>
+              <h6>
+                Company email: <span>{data[0]?.email}</span>
+              </h6>
+              <h6 className="text-break">
+                Company google map:{" "}
+                <span>{data[0]?.map}</span>
+              </h6>
+              <h4>Slider Image:</h4>
+              <div className="row">
+                {data[0]?.home_slider == null ? (
+                  "No Image Uploaded"
+                ) : (
+                  <>
+                    {JSON.parse(data[0]?.home_slider).map((item, index) => (
+                      <div className="col-lg-4 mb-3">
+                        <img
+                          key={index}
+                          className="img-fluid"
+                          src={`${domain}/uploads/${item}`}
+                          alt=""
+                          style={{ width: "100%", height: "250px" }}
+                        />
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

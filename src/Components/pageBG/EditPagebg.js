@@ -3,21 +3,20 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
-const EditBlog = () => {
+const EditPagebg = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const params = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [files, setFiles] = useState([]);
+  const [file, setFile] = useState({});
 
   useEffect(() => {
     axios
-      .get(`${domain}/blog`)
+      .get(`${domain}/allPagebg`)
       .then((res) => {
-        setData(res.data.blogs);
+        setData(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -30,9 +29,9 @@ const EditBlog = () => {
     if (data.length > 0 && singleUser) {
       setId(singleUser.id || "");
       setTitle(singleUser.title || "");
-      setContent(singleUser.description || "");
+      setFile(singleUser.image || "");
     }
-  }, [data, params.id, singleUser]);
+  }, [data, singleUser]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,54 +40,55 @@ const EditBlog = () => {
 
     formData.append("id", id);
     formData.append("title", title);
-    formData.append("content", content);
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
-    }
-
+    formData.append("file", file);
+  // Log form data
+  console.log("Form Data:");
+  formData.forEach((value, key) => {
+    console.log(`${key}: ${value}`);
+  });
     axios
-      .post(`${domain}/updateblog/`, formData)
+      .post(`${domain}/updatePagebg/`, formData)
       .then((res) => {
         console.log(res);
-        navigate("/blog");
+        if (res.status === 201) {
+          navigate("/page-bg");
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   return (
     <>
       <Container>
         <Row>
           <Col>
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="title">
-                <Form.Label>Title</Form.Label>
+              <Form.Group controlId="Name">
+                <Form.Label>Page Title</Form.Label>
                 <Form.Control
                   type="text"
-                  defaultValue={title}
+                  defaultValue={singleUser?.title}
+                  disabled
                   onChange={(e) => setTitle(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="content">
-                <Form.Label>Content</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={4}
-                  defaultValue={content}
-                  onChange={(e) => setContent(e.target.value)}
                 />
               </Form.Group>
               <Form.Group controlId="image">
                 <Form.Label>Image</Form.Label>
                 <Form.Control
-                  type="file"
-                  onChange={(e) => setFiles(e.target.files)}
-                  multiple
+                      type="file"
+                      onChange={(e) => setFile(e.target.files[0])}
+                    />
+                <img
+                  className="img-fluid my-2"
+                  src={`${domain}/uploads/${singleUser?.image}`}
+                  alt=""
+                  style={{ width: "400px", borderRadius: "10px" }}
                 />
               </Form.Group>
-              <Button type="submit" className="mt-2">
-                Create Blog Post
+              <Button variant="success" type="submit" className="mt-2">
+                Save
               </Button>
             </Form>
           </Col>
@@ -98,4 +98,4 @@ const EditBlog = () => {
   );
 };
 
-export default EditBlog;
+export default EditPagebg;

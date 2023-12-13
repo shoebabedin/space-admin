@@ -5,38 +5,38 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const domain = process.env.REACT_APP_DOMAIN;
-  const [loggedIn, setLoggedIn] = useState();
+  const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState();
-  const [user1, setUser1] = useState();
   const [data, setData] = useState();
   useEffect(() => {
     axios
       .get(`${domain}/home`)
       .then((res) => {
-        setData(res.data[0]);
+        setData(res.data.users[0]);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  console.log(user1);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setLoggedIn(false);
+    navigate("/login");
+  };
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("user"));
     setUser(items);
-    if (items == null) {
-      setLoggedIn(false);
-    } else {
+    if (items) {
       setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
     }
-  }, []);
+  }, [data, loggedIn]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
   return (
     <>
       <div className="header">
@@ -65,20 +65,20 @@ const Header = () => {
                   <NavLink to={"/blog"}>Blog</NavLink>
                 </li>
                 <li>
-                  <NavLink to={"/users"}>Users</NavLink>
-                </li>
-                <li>
                   <NavLink to={"/people"}>People</NavLink>
                 </li>
                 <li>
                   <NavLink to={"/career"}>Career</NavLink>
+                </li>
+                <li>
+                  <NavLink to={"/page-bg"}>PageBG</NavLink>
                 </li>
               </ul>
             </div>
             <div className="auth">
               <ul>
                 <li>
-                  <Button className="btn btn-secondary">{user.u_name}</Button>
+                  <Button className="btn btn-secondary">{user?.name}</Button>
                 </li>
                 <li>
                   <Button onClick={handleLogout}>Logout</Button>

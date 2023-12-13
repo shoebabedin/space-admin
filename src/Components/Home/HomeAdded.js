@@ -16,23 +16,21 @@ const HomeAdded = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
-
+  
     formData.append("companyName", companyName);
     formData.append("address", address);
     formData.append("phone", phone);
     formData.append("email", email);
     formData.append("googleMap", googleMap);
-
-    for (let i = 0; i < file.length; i++) {
-      formData.append("file", file[i]);
-    }
+    
+    // Append the file and files directly without converting to strings
+    formData.append("file", file);
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
-
-    console.log(formData.get("files"));
+  
     axios
       .post(`${domain}/createhome`, formData)
       .then((res) => {

@@ -1,17 +1,16 @@
+import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const CreateCareer = () => {
   const domain = process.env.REACT_APP_DOMAIN;
   const navigate = useNavigate();
+  const editorRef = useRef(null);
   const [title, setTitle] = useState("");
   const [vacancy, setVacancy] = useState("");
-  const [context, setContext] = useState("");
-  const [responsibilities, setResponsibilities] = useState("");
   const [education, setEducation] = useState("");
-  const [requirement, setRequirement] = useState("");
   const [salary, setSalary] = useState("");
 
   const handleSubmit = (e) => {
@@ -21,11 +20,13 @@ const CreateCareer = () => {
 
     formData.append("title", title);
     formData.append("vacancy", vacancy);
-    formData.append("context", context);
-    formData.append("responsibilities", responsibilities);
+    // Get the content from the TinyMCE Editor
+    if (editorRef.current) {
+      formData.append("description", editorRef.current.getContent());
+    }
     formData.append("education", education);
-    formData.append("requirement", requirement);
     formData.append("salary", salary);
+  
 
     axios
       .post(`${domain}/createcareer`, formData)
@@ -61,39 +62,7 @@ const CreateCareer = () => {
                   />
                 </Form.Group>
               </Col>
-              <Col lg={12}>
-                <Form.Group controlId="context">
-                  <Form.Label>Context</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    type="text"
-                    onChange={(e) => setContext(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col lg={12}>
-                <Form.Group controlId="responsibilities">
-                  <Form.Label>Responsibilities</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    type="email"
-                    onChange={(e) => setResponsibilities(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col lg={12}>
-                <Form.Group controlId="requirement">
-                  <Form.Label>Requirement</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    type="text"
-                    onChange={(e) => setRequirement(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
+             
               <Col lg={6}>
                 <Form.Group controlId="education">
                   <Form.Label>Education</Form.Label>
@@ -110,6 +79,51 @@ const CreateCareer = () => {
                   <Form.Control
                     type="text"
                     onChange={(e) => setSalary(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col lg={12}>
+                <Form.Group controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Editor
+                    onInit={(evt, editor) => (editorRef.current = editor)}
+                    init={{
+                      selector: "textarea",
+                      height: 500,
+                      menubar: false,
+                      plugins: [
+                        "advlist",
+                        "autolink",
+                        "lists",
+                        "link",
+                        "image",
+                        "charmap",
+                        "preview",
+                        "anchor",
+                        "searchreplace",
+                        "visualblocks",
+                        "code",
+                        "fullscreen",
+                        "insertdatetime",
+                        "media",
+                        "table",
+                        "code",
+                        "help",
+                        "wordcount"
+                      ],
+                      toolbar:
+                        "undo redo | " +
+                        "styles | bold italic underline forecolor superscript subscript | blockquote | alignleft aligncenter | quicklink  " +
+                        "alignright alignjustify | bullist numlist outdent indent | table " +
+                        "removeformat |  link image | formatting quickimage quicktable flipv fliph | editimage imageoptions | hr pagebreak | help ",
+                      table_toolbar:
+                        "tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
+                      content_style:
+                        "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                      toolbar_mode: "wrap" | "scrolling",
+                      toolbar_sticky: true,
+                      toolbar_sticky_offset: 100
+                    }}
                   />
                 </Form.Group>
               </Col>

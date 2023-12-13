@@ -13,7 +13,7 @@ const Career = () => {
     axios
       .get(`${domain}/career`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -23,7 +23,7 @@ const Career = () => {
   //   delete user
   const handleClick = (id) => {
     axios
-      .post(`${domain}/deletecareer/${id}`)
+      .post(`${domain}/deletecareer/`,{id: id})
       .then((res) => {
         setDeleteData(res);
       })
@@ -31,8 +31,6 @@ const Career = () => {
         console.log(err);
       });
   };
-
-  console.log(data);
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("user"));
@@ -60,9 +58,7 @@ const Career = () => {
                   <td colSpan={1}>ID</td>
                   <td colSpan={1}>Title</td>
                   <td colSpan={1}>Vacancy</td>
-                  <td colSpan={1}>Context</td>
-                  <td colSpan={1}>Responsibilities</td>
-                  <td colSpan={1}>Requirement</td>
+                  <td colSpan={1}>Description</td>
                   <td colSpan={1}>Education</td>
                   <td colSpan={1}>Salary</td>
                   <td colSpan={1}>Action</td>
@@ -75,9 +71,7 @@ const Career = () => {
                       <td colSpan={1}>{item.id}</td>
                       <td colSpan={1}>{item.title}</td>
                       <td colSpan={1}>{item.vacancy}</td>
-                      <td colSpan={1}>{item.context}</td>
-                      <td colSpan={1}>{item.responsibilities}</td>
-                      <td colSpan={1}>{item.requirement}</td>
+                      <td colSpan={1}>{item.description}</td>
                       <td colSpan={1}>{item.education}</td>
                       <td colSpan={1}>{item.salary}</td>
                       <td colSpan={1}>

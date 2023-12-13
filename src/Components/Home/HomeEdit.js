@@ -8,19 +8,20 @@ const HomeEdit = () => {
   const params = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [id, setId] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [googleMap, setGoogleMap] = useState("");
   const [file, setFile] = useState({});
-  const [files, setFiles] = useState({});
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     axios
       .get(`${domain}/home`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data.users);
       })
       .catch((err) => {
         console.log(err);
@@ -30,20 +31,25 @@ const HomeEdit = () => {
   const singleUser = data.find((item) => item.id == params.id);
 
   useEffect(() => {
-    if (data.length > 0 && params.id && singleUser) {
-      setCompanyName(singleUser.company_name || "");
+    if (data.length > 0 && singleUser) {
+      setId(singleUser.id || "");
+      setCompanyName(singleUser.companyName || "");
       setAddress(singleUser.address || "");
       setPhone(singleUser.phone || "");
       setEmail(singleUser.email || "");
-      setGoogleMap(singleUser.map || "");
+      setGoogleMap(singleUser.googleMap || "");
+      setFile(singleUser.image || "");
+      setFiles(singleUser.home_slider || "");
     }
-  }, [data, params.id, singleUser]);
+  }, [data, singleUser]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData();
 
+    formData.append("id", id);
     formData.append("companyName", companyName);
     formData.append("address", address);
     formData.append("phone", phone);
@@ -51,14 +57,12 @@ const HomeEdit = () => {
     formData.append("googleMap", googleMap);
     formData.append("file", file);
 
-   
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
-
-    
+  
     axios
-      .post(`${domain}/updatehome/${params.id}`, formData)
+      .post(`${domain}/updatehome/`, formData)
       .then((res) => {
         console.log(res);
         navigate("/");
@@ -67,6 +71,7 @@ const HomeEdit = () => {
         console.log(err);
       });
   };
+
   return (
     <>
       <Container>
@@ -125,21 +130,19 @@ const HomeEdit = () => {
               </Col>
               <Col lg={6}>
                 <Form.Group controlId="image">
-                  <Form.Label>Image</Form.Label>
+                  <Form.Label>Logo</Form.Label>
                   <Form.Control
                     type="file"
                     onChange={(e) => setFile(e.target.files[0])}
                   />
-                  {/* <div className="bg-black">
+                  <div className="bg-black">
                     <img
                       className="img-fluid"
-                      src={`${domain}/uploads/${
-                        singleUser && JSON.parse(singleUser.image)
-                      }`}
+                      src={`${domain}/uploads/${file}`}
                       alt=""
-                      style={{ width: "100%", height: "50px" }}
+                      style={{ width: "300px", height: "50px" }}
                     />
-                  </div> */}
+                  </div>
                 </Form.Group>
               </Col>
               <Col lg={6}>
@@ -151,20 +154,31 @@ const HomeEdit = () => {
                     multiple
                   />
                   <div className="bg-black">
-                    <img
-                      className="img-fluid"
-                      src={`${domain}/uploads/${
-                        singleUser && JSON.parse(singleUser.home_slider)
-                      }`}
-                      alt=""
-                      style={{ width: "100%", height: "50px" }}
-                    />
+                    <div className="row">
+                      {files
+                        ? files?.map((item, index) => (
+                            <div key={index} className="col mb-4">
+                              <img
+                                key={index}
+                                className="img-fluid"
+                                src={`${domain}/uploads/${item}`}
+                                alt=""
+                                style={{
+                                  width: "100%",
+                                  height: "250px",
+                                  objectFit: "contain"
+                                }}
+                              />
+                            </div>
+                          ))
+                        : <p className="text-light text-center">"No Image Uploaded"</p>}
+                    </div>
                   </div>
                 </Form.Group>
               </Col>
               <Col lg={12}>
                 <Button type="submit" className="mt-2 w-100">
-                  Create new
+                  Update
                 </Button>
               </Col>
             </Form>

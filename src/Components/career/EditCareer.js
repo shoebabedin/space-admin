@@ -1,5 +1,6 @@
+import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -8,19 +9,19 @@ const EditCareer = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [data, setData] = useState([]);
+  const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [vacancy, setVacancy] = useState("");
-  const [context, setContext] = useState("");
-  const [responsibilities, setResponsibilities] = useState("");
+  const [description, setDescription] = useState("");
   const [education, setEducation] = useState("");
-  const [requirement, setRequirement] = useState("");
   const [salary, setSalary] = useState("");
+  const editorRef = useRef(null);
 
   useEffect(() => {
     axios
       .get(`${domain}/career`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -32,32 +33,31 @@ const EditCareer = () => {
   const singleUser = data.find((item) => item.id == params.id);
 
   useEffect(() => {
-    if (data.length > 0 && params.id && singleUser) {
+    if (data.length > 0 && singleUser) {
+      setId(singleUser.id || "");
       setTitle(singleUser.title || "");
       setVacancy(singleUser.vacancy || "");
-      setContext(singleUser.context || "");
-      setResponsibilities(singleUser.responsibilities || "");
+      setDescription(singleUser.description || "");
       setEducation(singleUser.education || "");
-      setRequirement(singleUser.requirement || "");
       setSalary(singleUser.salary || "");
     }
-  }, [data, params.id, singleUser]);
+  }, [data, singleUser]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-
+    formData.append("id", id);
     formData.append("title", title);
     formData.append("vacancy", vacancy);
-    formData.append("context", context);
-    formData.append("responsibilities", responsibilities);
     formData.append("education", education);
-    formData.append("requirement", requirement);
     formData.append("salary", salary);
+    if (editorRef.current) {
+      formData.append("description", editorRef.current.getContent());
+    }
 
     axios
-      .post(`${domain}/updatecareer/${params.id}`, formData)
+      .post(`${domain}/updatecareer/`, formData)
       .then((res) => {
         console.log(res);
         navigate("/career");
@@ -67,7 +67,6 @@ const EditCareer = () => {
       });
   };
 
-  console.log(singleUser);
   return (
     <>
       <Container>
@@ -116,38 +115,52 @@ const EditCareer = () => {
                 </Form.Group>
               </Col>
               <Col lg={12}>
-                <Form.Group controlId="context">
-                  <Form.Label>Context</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    defaultValue={context}
-                    onChange={(e) => setContext(e.target.value)}
+                <Form.Group controlId="description">
+                  <Form.Label>Description</Form.Label>
+                  <Editor
+                    onInit={(evt, editor) => (editorRef.current = editor)}
+                    initialValue={description}
+                    init={{
+                      selector: "textarea",
+                      height: 500,
+                      menubar: false,
+                      plugins: [
+                        "advlist",
+                        "autolink",
+                        "lists",
+                        "link",
+                        "image",
+                        "charmap",
+                        "preview",
+                        "anchor",
+                        "searchreplace",
+                        "visualblocks",
+                        "code",
+                        "fullscreen",
+                        "insertdatetime",
+                        "media",
+                        "table",
+                        "code",
+                        "help",
+                        "wordcount"
+                      ],
+                      toolbar:
+                        "undo redo | " +
+                        "styles | bold italic underline forecolor superscript subscript | blockquote | alignleft aligncenter | quicklink  " +
+                        "alignright alignjustify | bullist numlist outdent indent | table " +
+                        "removeformat |  link image | formatting quickimage quicktable flipv fliph | editimage imageoptions | hr pagebreak | help ",
+                      table_toolbar:
+                        "tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
+                      content_style:
+                        "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                      toolbar_mode: "wrap" | "scrolling",
+                      toolbar_sticky: true,
+                      toolbar_sticky_offset: 100
+                    }}
                   />
                 </Form.Group>
               </Col>
-              <Col lg={12}>
-                <Form.Group controlId="responsibilities">
-                  <Form.Label>Responsibilities</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    defaultValue={responsibilities}
-                    onChange={(e) => setResponsibilities(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
-              <Col lg={12}>
-                <Form.Group controlId="requirement">
-                  <Form.Label>Requirement</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    defaultValue={requirement}
-                    onChange={(e) => setRequirement(e.target.value)}
-                  />
-                </Form.Group>
-              </Col>
+          
 
               <Col lg={12}>
                 <Button type="submit" className="mt-2 w-100">

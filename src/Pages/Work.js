@@ -5,15 +5,16 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Work = () => {
   const domain = process.env.REACT_APP_DOMAIN;
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [deleteData, setDeleteData] = useState([]);
-  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     axios
       .get(`${domain}/work`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data.works);
       })
       .catch((err) => {
         console.log(err);
@@ -23,7 +24,7 @@ const Work = () => {
   //   delete user
   const handleClick = (id) => {
     axios
-      .post(`${domain}/deleteuser/${id}`)
+      .post(`${domain}/deletework/`,{ id: id })
       .then((res) => {
         setDeleteData(res);
       })
@@ -39,18 +40,18 @@ const Work = () => {
     }
   }, []);
 
-  console.log(data);
 
+console.log(data);
   return (
     <>
       <div className="container">
         <div className="row">
-        <div className="col-12">
+          <div className="col-12">
             <div className="d-flex align-items-center justify-content-between">
               <h2 className="text-center title">Work Page</h2>
-                <Link to={"/work-added"} className="btn btn-primary">
-                  Work data added
-                </Link>
+              <Link to={"/work-added"} className="btn btn-primary">
+                Work data added
+              </Link>
             </div>
           </div>
           <div className="col-12">
@@ -71,26 +72,33 @@ const Work = () => {
                       <td>{item.id}</td>
                       <td>{item.title}</td>
                       <td>{item.description}</td>
-                      <td>
-                      {JSON.parse(item.image).map((item, index)=>
-                        <img key={index} className="img-fluid mx-2" src={`${domain}/uploads/${item}`} alt="" style={{width: "50px", height: "50px"}}/>
-                      )}
+                      <td className="d-flex align-items-center justify-content-start flex-wrap gap-2">
+                        {item.image.map((item, index) => (
+                          <img
+                            key={index}
+                            className="img-fluid object-fit-cover"
+                            src={`${domain}/uploads/${item}`}
+                            alt=""
+                            style={{ width: "50px", height: "50px" }}
+                          />
+                        ))}
                       </td>
                       <td>
-                        <Link
-                          to={`/work-edit/${item.id}`}
-                          className="btn btn-primary me-2"
-                        >
-                          Edit
-                        </Link>
-                        <Button
-                          onClick={() => handleClick(item.id)}
-                          className="btn btn-danger"
-                          role="button"
-                          type="submit"
-                        >
-                          Delete
-                        </Button>
+                        <div className="d-flex align-items-center justify-content-start flex-wrap gap-2">
+                          <Link
+                            to={`/work-edit/${item.id}`}
+                            className="btn btn-primary flex-grow-1"
+                          >
+                            Edit
+                          </Link>
+                          <Button
+                            onClick={() => handleClick(item.id)}
+                            className="btn btn-danger flex-grow-1"
+                            role="button"
+                          >
+                            Delete
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -98,6 +106,7 @@ const Work = () => {
             </Table>
           </div>
         </div>
+        {/* Work Page */}
       </div>
     </>
   );

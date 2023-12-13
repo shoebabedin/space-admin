@@ -13,7 +13,7 @@ const BlogList = () => {
       .get(`${domain}/blog`)
       .then((res) => {
         // console.log(res.data);
-        setData(res.data);
+        setData(res.data.blogs);
       })
       .catch((err) => {
         console.log(err);
@@ -23,7 +23,7 @@ const BlogList = () => {
   //   delete user
   const handleClick = (id) => {
     axios
-      .post(`${domain}/deleteblog/${id}`)
+      .post(`${domain}/deleteblog/`, {id: id})
       .then((res) => {
         console.log(res);
         setDeleteData(res);
@@ -33,7 +33,7 @@ const BlogList = () => {
       });
   };
 
-
+console.log(data);
 
   return (
     <>
@@ -64,8 +64,8 @@ const BlogList = () => {
                     <tr key={item.id}>
                       <td>{item.id}</td>
                       <td>{item.title}</td>
-                      <td>{item.content}</td>
-                      <td>{JSON.parse(item.blog_Img).map((item, index)=>
+                      <td>{item.description}</td>
+                      <td>{item.image.map((item, index)=>
                         <img key={index} className="img-fluid mx-2" src={`${domain}/uploads/${item}`} alt="" style={{width: "50px", height: "50px"}}/>
                       )}</td>
                       <td>

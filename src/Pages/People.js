@@ -13,7 +13,7 @@ const People = () => {
     axios
       .get(`${domain}/people`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -23,7 +23,7 @@ const People = () => {
   //   delete user
   const handleClick = (id) => {
     axios
-      .post(`${domain}/deletepeople/${id}`)
+      .post(`${domain}/deletepeople/`,{id: id})
       .then((res) => {
         setDeleteData(res);
       })
@@ -40,6 +40,7 @@ const People = () => {
       navigate("login");
     }
   }, []);
+
 
   return (
     <>
@@ -60,8 +61,10 @@ const People = () => {
                 <tr>
                   <td colSpan={1}>ID</td>
                   <td colSpan={1}>Name</td>
+                  <td colSpan={1}>Profile Image</td>
                   <td colSpan={1}>Designation</td>
-                  <td colSpan={1}>Image</td>
+                  <td colSpan={1}>Description</td>
+                  <td colSpan={1}>Project Image</td>
                   <td colSpan={1}>Action</td>
                 </tr>
               </thead>
@@ -71,20 +74,43 @@ const People = () => {
                     <tr key={index}>
                       <td colSpan={1}>{item.id}</td>
                       <td colSpan={1}>{item.name}</td>
-                      <td colSpan={1}>{item.designation}</td>
                       <td colSpan={1}>
-                        {item.image == null ? (
+                        {item.profileImage == null ? (
                           "No Image Uploaded"
                         ) : (
                           <>
                             <img
                               className="img-fluid mx-2"
-                              src={`${domain}/uploads/${item.image}`}
+                              src={`${domain}/uploads/${item.profileImage}`}
                               alt=""
-                              style={{ width: "50px", height: "50px" }}
+                              style={{ width: "150px" }}
                             />
                           </>
                         )}
+                      </td>
+                      <td colSpan={1}>{item.designation}</td>
+                      <td colSpan={1}>{item.description}</td>
+                      <td colSpan={1}>
+                        
+                        <div className="row gx-2">
+                          {item?.projectImage == null ? (
+                                "No Image Uploaded"
+                              ) : (
+                                <>
+                                  {item?.projectImage.map((item, index) => (
+                                    <div key={index} className="col">
+                                      <img
+                                        key={index}
+                                        className="img-fluid"
+                                        src={`${domain}/uploads/${item}`}
+                                        alt=""
+                                        style={{ width: "150px", height: "100%" }}
+                                      />
+                                    </div>
+                                  ))}
+                                </>
+                              )}
+                        </div>
                       </td>
                       <td colSpan={1}>
                         <Link

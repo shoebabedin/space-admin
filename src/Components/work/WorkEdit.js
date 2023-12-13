@@ -1,5 +1,6 @@
+import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -8,15 +9,22 @@ const WorkEdit = () => {
   const params = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [id, setId] = useState("");
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState();
   const [files, setFiles] = useState({});
+  const editorRef = useRef(null);
 
+  // const log = () => {
+  //   if (editorRef.current) {
+  //     console.log(editorRef.current.getContent());
+  //   }
+  // };
   useEffect(() => {
     axios
       .get(`${domain}/work`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data.works);
       })
       .catch((err) => {
         console.log(err);
@@ -26,26 +34,33 @@ const WorkEdit = () => {
   const singleUser = data.find((item) => item.id == params.id);
 
   useEffect(() => {
-    if (data.length > 0 && params.id && singleUser) {
+    // Inside your handleSubmit function after submitting the form
+    if (data.length > 0 && singleUser) {
+      setId(singleUser.id || "");
       setTitle(singleUser.title || "");
       setDescription(singleUser.description || "");
     }
-  }, [data, params.id, singleUser]);
+  }, [data, singleUser]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData();
 
+    formData.append("id", id);
     formData.append("title", title);
-    formData.append("description", description);
+
+    // Get the content from the TinyMCE Editor
+    if (editorRef.current) {
+      formData.append("content", editorRef.current.getContent());
+    }
 
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
-
     axios
-      .post(`${domain}/updatework/${params.id}`, formData)
+      .post(`${domain}/updatework/`, formData)
       .then((res) => {
         console.log(res);
         navigate("/work");
@@ -54,6 +69,7 @@ const WorkEdit = () => {
         console.log(err);
       });
   };
+
   return (
     <>
       <Container>
@@ -84,11 +100,45 @@ const WorkEdit = () => {
               <Col lg={12}>
                 <Form.Group controlId="description">
                   <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    defaultValue={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                  <Editor
+                    onInit={(evt, editor) => (editorRef.current = editor)}
+                    initialValue={description}
+                    init={{
+                      selector: "textarea",
+                      height: 500,
+                      menubar: false,
+                      plugins: [
+                        "advlist",
+                        "autolink",
+                        "lists",
+                        "link",
+                        "image",
+                        "charmap",
+                        "preview",
+                        "anchor",
+                        "searchreplace",
+                        "visualblocks",
+                        "code",
+                        "fullscreen",
+                        "insertdatetime",
+                        "media",
+                        "table",
+                        "code",
+                        "help",
+                        "wordcount"
+                      ],
+                      toolbar:
+                        "undo redo | " +
+                        "styles | bold italic underline forecolor superscript subscript | blockquote | alignleft aligncenter | quicklink  " +
+                        "alignright alignjustify | bullist numlist outdent indent | table " +
+                        "removeformat |  link image | formatting quickimage quicktable flipv fliph | editimage imageoptions | hr pagebreak | help ",
+                      table_toolbar:
+                        "tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol",
+                      content_style: "body",
+                      toolbar_mode: "wrap" | "scrolling",
+                      toolbar_sticky: true,
+                      toolbar_sticky_offset: 100
+                    }}
                   />
                 </Form.Group>
               </Col>
